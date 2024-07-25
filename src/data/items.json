@@ -1,0 +1,26 @@
+[
+    {
+        "id": 1,
+        "name": "Manchester City",
+        "price": 150,
+        "imgUrl": "img/manchester_city.png"
+    },
+    {
+        "id": 2,
+        "name": "Arsenal",
+        "price": 95,
+        "imgUrl": "img/arsenal.jpg"
+    },
+    {
+        "id": 3,
+        "name": "Real Madrid",
+        "price": 150,
+        "imgUrl": "img/real_madrid.png"
+    },
+    {
+        "id": 4,
+        "name": "Bayern Munich",
+        "price": 125,
+        "imgUrl": "img/bayern.jpg"
+    }
+]
