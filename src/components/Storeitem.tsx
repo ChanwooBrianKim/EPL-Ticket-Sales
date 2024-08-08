@@ -1,7 +1,8 @@
-import { Button, Card } from "react-bootstrap";
-import { formatCurrency } from "../utilities/formatCurrency";
-import { useShoppingCart } from "../context/ShoppingCartContext";
+import { Button, Card } from "react-bootstrap"; // Importing Button and Card components from react-bootstrap
+import { formatCurrency } from "../utilities/formatCurrency"; // Importing utility function for formatting currency
+import { useShoppingCart } from "../context/ShoppingCartContext"; // Importing custom hook for shopping cart context
 
+// Type definition for the props of StoreItem component
 type StoreItemProps = {
     id: number;
     name: string;
@@ -9,9 +10,11 @@ type StoreItemProps = {
     imgUrl: string;
 };
 
+// StoreItem component definition
 export function StoreItem({ id, name, price, imgUrl }: StoreItemProps) {
-    const { getItemQuantity, increaseCartQuantity, decreaseCartQuantity, removeFromCart } = useShoppingCart()
-    const quantity = getItemQuantity(id);
+    const { getItemQuantity, increaseCartQuantity, decreaseCartQuantity, removeFromCart } = useShoppingCart(); // Getting functions from the shopping cart context
+    const quantity = getItemQuantity(id); // Getting the current quantity of the item in the cart
+
     return (
         <Card className="h-100">
             <Card.Img

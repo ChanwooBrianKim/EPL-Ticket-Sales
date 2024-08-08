@@ -1,11 +1,14 @@
-import { Container, Nav, Navbar as NavbarBs, Button } from "react-bootstrap"
-import { NavLink } from "react-router-dom"
-import { useShoppingCart } from "../context/ShoppingCartContext"
+import { Container, Nav, Navbar as NavbarBs, Button } from "react-bootstrap"; // Importing components from react-bootstrap for UI
+import { NavLink } from "react-router-dom"; // Importing NavLink from react-router-dom for navigation
+import { useShoppingCart } from "../context/ShoppingCartContext"; // Importing custom hook for shopping cart context
 
+// Navbar component definition
 export function Navbar() {
-    const { openCart, cartQuantity } = useShoppingCart()
+    const { openCart, cartQuantity } = useShoppingCart(); // Getting openCart function and cartQuantity from context
+    
     return (
-        <NavbarBs sticky="top" className="bg-white shodow-sm mb-3">
+        // Using Navbar component from react-bootstrap with sticky positioning and styling
+        <NavbarBs sticky="top" className="bg-white shadow-sm mb-3">
             <Container>
                 <Nav className="me-auto">
                     <Nav.Link to="/" as={NavLink}>
