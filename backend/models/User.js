@@ -1,38 +1,20 @@
-// Initialize Sequelize
-const { DataTypes } = require("sequelize");
+import { Model, DataTypes } from 'sequelize';
+import sequelize from './index.js';
 
-// Export a function that will define the model
-module.exports = (sequelize, DataTypes) => {
-    const User = sequelize.define('User', {
-      name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-      },
-      password: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      isAdmin: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-        allowNull: false,
-      }
-    }, {});
-    
-    // Define the model associations
-    User.associate = function(models) {
-      // associations can be defined here
-      User.hasMany(models.Order, {
-        foreignKey: 'userId',
-        as: 'orders',
-      });
-    };
-  
-    return User;
-  };
-  
+class User extends Model {
+  static associate(models) {
+    // Define associations here if needed
+  }
+}
+
+User.init({
+  name: DataTypes.STRING,
+  email: DataTypes.STRING,
+  password: DataTypes.STRING,
+  isAdmin: DataTypes.BOOLEAN,
+}, {
+  sequelize, // Ensure sequelize instance is passed here
+  modelName: 'User',
+});
+
+export default User;

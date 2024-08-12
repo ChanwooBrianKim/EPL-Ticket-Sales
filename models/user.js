@@ -1,5 +1,5 @@
 import { Model, DataTypes } from 'sequelize';
-import sequelize from './index.js'; // Adjust this path if necessary
+import sequelize from './index.js';
 
 class User extends Model {
   static associate(models) {
