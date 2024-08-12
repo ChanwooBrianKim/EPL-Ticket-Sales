@@ -1,5 +1,7 @@
-module.exports = (sequelize, DataTypes) => {
-    const Order = sequelize.define('Order', {
+// Initialize Order model
+module.exports = (sequelize, DataTypes) => { // Export a function that will define the model
+  // Define the Order model  
+  const Order = sequelize.define('Order', {
       totalAmount: {
         type: DataTypes.FLOAT,
         allowNull: false,
@@ -10,7 +12,8 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: 'Pending',
       }
     }, {});
-  
+    
+    // Define the model associations
     Order.associate = function(models) {
       // associations can be defined here
       Order.belongsTo(models.User, {

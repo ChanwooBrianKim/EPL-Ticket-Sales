@@ -1,3 +1,4 @@
+ // Export a function that will define the model
 module.exports = (sequelize, DataTypes) => {
     const OrderItem = sequelize.define('OrderItem', {
       quantity: {
@@ -9,7 +10,8 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       }
     }, {});
-  
+    
+    // Define the model associations
     OrderItem.associate = function(models) {
       // associations can be defined here
       OrderItem.belongsTo(models.Order, {
