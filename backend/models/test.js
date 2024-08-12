@@ -1,22 +1,25 @@
-const jwt = require('jsonwebtoken');
+// backend/server.js
 
-exports.protect = (req, res, next) => {
-  const token = req.headers.authorization.split(' ')[1];
-  if (!token) {
-    return res.status(401).json({ message: 'Not authorized' });
-  }
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
-    next();
-  } catch (error) {
-    res.status(401).json({ message: 'Token is not valid' });
-  }
-};
+const express = require('express'); // Importing Express.js
+const cors = require('cors'); // Importing CORS middleware
+const bodyParser = require('body-parser'); // Importing body-parser for parsing request bodies
 
-exports.adminProtect = (req, res, next) => {
-  if (!req.user || !req.user.isAdmin) {
-    return res.status(403).json({ message: 'Admin access required' });
-  }
-  next();
-};
+// Initialize Express app
+const app = express();
+
+// Middleware setup
+app.use(cors()); // Enable CORS
+app.use(bodyParser.json()); // Parse JSON request bodies
+
+// Example route (you would add more routes or import them from other files)
+app.get('/', (req, res) => {
+  res.send('Hello, World!');
+});
+
+// Import your authentication routes (assuming you have them in backend/routes/authRoutes.js)
+// const authRoutes = require('./routes/authRoutes');
+// app.use('/api/auth', authRoutes);
+
+// Start the server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
