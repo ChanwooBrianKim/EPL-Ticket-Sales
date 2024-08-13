@@ -12,14 +12,24 @@ const RegisterForm = () => {
     try {
       const response = await axios.post('/api/auth/register', { name, email, password });
       const token = response.data.token;
-      // Store the token in local storage
       localStorage.setItem('authToken', token);
-      // Redirect or update UI after successful registration
     } catch (err) {
-      setError('Registration failed. Please try again.');
+      if ((err as any).response) {
+        // Server responded with a status other than 2xx
+        console.error('Error response:', (err as any).response.data);
+        setError((err as any).response.data.msg || 'Registration failed. Please try again.');
+      } else if ((err as any).request) {
+        // No response was received
+        console.error('Error request:', (err as any).request);
+        setError('No response from server. Please try again later.');
+      } else {
+        // Something happened while setting up the request
+        console.error('Error message:', (err as any).message);
+        setError('Registration failed. Please try again.');
+      }
     }
   };
-
+  
   return (
     <form onSubmit={handleRegister}>
       <div>
