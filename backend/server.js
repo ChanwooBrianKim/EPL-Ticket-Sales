@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import authRoutes from './routes/authRoutes.js'; // Correctly importing the auth routes
+import authRoutes from './routes/authRoutes.js'; // Import the authRoutes
 
 // Initialize Express app
 const app = express();
@@ -11,7 +11,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Use authRoutes for /api/auth path
-app.use('/api/auth', authRoutes); 
+app.use('/api/auth', authRoutes);
 
 // Start the server
 const PORT = process.env.PORT || 5000;
