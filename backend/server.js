@@ -2,6 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import authRoutes from './routes/authRoutes.js'; // Import the authRoutes
+import productRoutes from './routes/productRoutes.js'; // Import the productRoutes
+import orderRoutes from './routes/orderRoutes.js'; // Import the orderRoutes
 
 // Initialize Express app
 const app = express();
@@ -10,8 +12,10 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-// Use authRoutes for /api/auth path
-app.use('/api/auth', authRoutes);
+
+app.use('/api/auth', authRoutes); // Use authRoutes for /api/auth path
+app.use('/api/products', productRoutes); // Use productRoutes for /api/products path
+app.use('/api/orders', orderRoutes); // Use orderRoutes for /api/orders path
 
 // Start the server
 const PORT = process.env.PORT || 5000;
