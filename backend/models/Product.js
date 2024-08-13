@@ -1,38 +1,29 @@
-// Initialize Product model
-const { Sequelize } = require("sequelize");
+import { Model, DataTypes } from 'sequelize'; // Import the sequelize library
+import sequelize from '../config/db'; // Import the connection instance
 
-// Export a function that will define the model
-module.exports = (sequelize, DataTypes) => {
-    const User = sequelize.define('User', {
-      name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-      },
-      password: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      isAdmin: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-        allowNull: false,
-      }
-    }, {});
-    
-    // Define the model associations
-    User.associate = function(models) {
-      // associations can be defined here
-      User.hasMany(models.Order, {
-        foreignKey: 'userId',
-        as: 'orders',
-      });
-    };
-  
-    return User;
-  };
-  
+class Product extends Model {} // Initialize the Product class that extends the Model class
+
+// Set up the Product table
+Product.init({
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  price: {
+    type: DataTypes.FLOAT,
+    allowNull: false,
+  },
+  description: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+  },
+  stock: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+}, {
+  sequelize, // Connect the sequelize instance
+  modelName: 'Product', // Set the model name
+});
+
+export default Product; // Export the Product model
