@@ -1,5 +1,5 @@
 import { Model, DataTypes } from 'sequelize'; // Import the sequelize library
-import sequelize from '../config/db'; // Import the connection instance
+import sequelize from '../config/db.js'; // Import the connection instance
 
 class Product extends Model {} // Initialize the Product class that extends the Model class
 
