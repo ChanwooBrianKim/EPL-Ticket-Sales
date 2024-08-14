@@ -16,7 +16,7 @@ const RegisterForm = () => {
       const token = response.data.token;
       localStorage.setItem('authToken', token);
       // Redirect to a different page after successful registration
-      navigate('/login');
+      navigate('/');
     } catch (err) {
       if ((err as any).response) {
         // Server responded with a status other than 2xx
