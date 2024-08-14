@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate(); // Use the navigate hook
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -13,7 +15,8 @@ const LoginForm = () => {
       const token = response.data.token;
       // Store the token in local storage
       localStorage.setItem('authToken', token);
-      // Redirect or update UI after successful login
+      // Redirect to a different page after successful registration
+      navigate('/');
     } catch (err) {
       setError('Invalid credentials. Please try again.');
     }
