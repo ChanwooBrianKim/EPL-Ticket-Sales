@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const RegisterForm = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate(); // Use the navigate hook
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -13,6 +15,8 @@ const RegisterForm = () => {
       const response = await axios.post('/api/auth/register', { name, email, password });
       const token = response.data.token;
       localStorage.setItem('authToken', token);
+      // Redirect to a different page after successful registration
+      navigate('/login');
     } catch (err) {
       if ((err as any).response) {
         // Server responded with a status other than 2xx
