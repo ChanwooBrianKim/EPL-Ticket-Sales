@@ -1,5 +1,6 @@
 import express from 'express'; // Import the express module
-import { createProduct, getProducts, updateProduct, deleteProduct } from '../controllers/productController.js'; // Import the controller functions
+// Import the controller functions
+import { createProduct, getProducts, updateProduct, deleteProduct } from '../controllers/productController.js';
 
 const router = express.Router(); // Create a new router
 

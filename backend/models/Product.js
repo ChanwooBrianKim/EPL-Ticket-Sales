@@ -17,10 +17,14 @@ Product.init({
     type: DataTypes.TEXT,
     allowNull: true,
   },
-  stock: {
+  stockQuantity: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
+  imgUrl: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  }
 }, {
   sequelize, // Connect the sequelize instance
   modelName: 'Product', // Set the model name
