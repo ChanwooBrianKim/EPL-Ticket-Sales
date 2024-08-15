@@ -1,0 +1,14 @@
+const path = require('path');
+
+// Debug
+// console.log('Config Path:', path.resolve(__dirname, 'backend', 'config', 'config.json'));
+// console.log('Models Path:', path.resolve(__dirname, 'backend', 'models'));
+// console.log('Migrations Path:', path.resolve(__dirname, 'backend', 'migrations'));
+// console.log('Seeders Path:', path.resolve(__dirname, 'backend', 'seeders'));
+
+module.exports = {
+  'config': path.resolve(__dirname, 'backend', 'config', 'config.json'),
+  'models-path': path.resolve(__dirname, 'backend', 'models'),
+  'seeders-path': path.resolve(__dirname, 'backend', 'seeders'),
+  'migrations-path': path.resolve(__dirname, 'backend', 'migrations'),
+};
