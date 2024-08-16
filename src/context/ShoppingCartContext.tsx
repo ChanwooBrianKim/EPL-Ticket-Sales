@@ -11,6 +11,8 @@ type ShoppingCartProviderProps = {
 type CartItem = {
     id: number;
     quantity: number;
+    name: string;
+    price: number;
 };
 
 // Type definition for the ShoppingCartContext properties
@@ -24,6 +26,7 @@ type ShoppingCartContextProps = {
     removeFromCart: (id: number) => void
     cartQuantity: number
     cartItems: CartItem[]
+    getTotalCost: number
 }
 
 // Creating a context for the shopping cart
@@ -58,7 +61,7 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
     function increaseCartQuantity(id: number) {
         setCartItems(currItems => {
             if (currItems.find(item => item.id === id) == null) {
-                return [...currItems, { id, quantity: 1 }]
+                return [...currItems, { id, quantity: 1, name: "", price: 0 }]
             } else {
                 return currItems.map(item => {
                     if (item.id === id) {
@@ -106,7 +109,8 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
             decreaseCartQuantity,
             removeFromCart,
             cartItems,
-            cartQuantity
+            cartQuantity,
+            getTotalCost: 0
         }}>
             {children}
             <ShoppingCart isOpen={isOpen} />
