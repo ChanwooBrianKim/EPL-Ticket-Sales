@@ -40,12 +40,17 @@ export function Navbar() {
               <Nav.Link to="/dashboard" as={NavLink}>
                 Dashboard
               </Nav.Link>
+              <Nav.Link to="/checkout" as={NavLink}>
+                Checkout
+              </Nav.Link>
               <Button
                 variant="outline-primary"
                 className="rounded-circle"
                 style={{ marginLeft: '10px' }}
-                onClick={handleLogout}
-              >
+                onClick={() => {
+                  localStorage.removeItem('authToken');
+                  window.location.href = '/login';
+              }}              >
                 Logout
               </Button>
             </>
