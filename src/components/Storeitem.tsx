@@ -29,7 +29,7 @@ export function StoreItem({ id, name, price, imgUrl }: StoreItemType) {
                 <div className="mt-auto">
                     {/* Conditional rendering based on whether the item is in the cart */}
                     {quantity === 0 ? (
-                        <Button className="w-100" onClick={() => increaseCartQuantity(id)}>
+                        <Button className="w-100" onClick={() => increaseCartQuantity(id, name, price)}>
                             + Add To Cart
                         </Button>
                     ) : (
@@ -43,7 +43,7 @@ export function StoreItem({ id, name, price, imgUrl }: StoreItemType) {
                             >
                                 <Button onClick={() => decreaseCartQuantity(id)}>-</Button>
                                 <span className="fs-3">{quantity}</span> in cart
-                                <Button onClick={() => increaseCartQuantity(id)}>+</Button>
+                                <Button onClick={() => increaseCartQuantity(id, name, price)}>+</Button>
                             </div>
                             <Button onClick={() => removeFromCart(id)} variant="danger" size="sm">
                                 Remove
