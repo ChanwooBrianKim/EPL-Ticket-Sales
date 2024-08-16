@@ -2,6 +2,7 @@ import { useContext, createContext, ReactNode, useState } from "react"; // Impor
 import { ShoppingCart } from "../components/ShoppingCart"; // Importing ShoppingCart component
 import { useLocalStorage } from "../hooks/useLocalStorage"; // Importing custom hook for local storage
 
+
 // Type definition for the props of ShoppingCartProvider component
 type ShoppingCartProviderProps = {
     children: ReactNode // ReactNode type for children prop to support any valid React child
@@ -15,18 +16,19 @@ type CartItem = {
     price: number;
 };
 
+
 // Type definition for the ShoppingCartContext properties
 type ShoppingCartContextProps = {
     isOpen: boolean
     openCart: () => void
     closeCart: () => void
     getItemQuantity: (id: number) => number
-    increaseCartQuantity: (id: number) => void
+    increaseCartQuantity: (id: number, name: string, price: number) => void
     decreaseCartQuantity: (id: number) => void
     removeFromCart: (id: number) => void
     cartQuantity: number
     cartItems: CartItem[]
-    getTotalCost: number
+    getTotalCost: () => number
 }
 
 // Creating a context for the shopping cart
@@ -58,10 +60,10 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
     }
 
     // Function to increase the quantity of a specific item in the cart
-    function increaseCartQuantity(id: number) {
+    function increaseCartQuantity(id: number, name: string, price: number) {
         setCartItems(currItems => {
             if (currItems.find(item => item.id === id) == null) {
-                return [...currItems, { id, quantity: 1, name: "", price: 0 }]
+                return [...currItems, { id, quantity: 1, name, price }]
             } else {
                 return currItems.map(item => {
                     if (item.id === id) {
@@ -98,6 +100,10 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
         })
     }
 
+    const getTotalCost = () => {
+        return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+    }
+
     return (
         // Providing the shopping cart context to its children
         <ShoppingCartContext.Provider value={{
@@ -110,7 +116,7 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
             removeFromCart,
             cartItems,
             cartQuantity,
-            getTotalCost: 0
+            getTotalCost
         }}>
             {children}
             <ShoppingCart isOpen={isOpen} />
