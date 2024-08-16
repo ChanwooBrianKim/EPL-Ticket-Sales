@@ -29,7 +29,7 @@ export function Checkout() {
                     </ListGroup.Item>
                 ))}
             </ListGroup>
-            <h3>Total: ${getTotalCost}</h3>
+            <h3>Total: ${getTotalCost()}</h3>
 
             <Form onSubmit={handleSubmit}>
                 <Row>
@@ -75,5 +75,4 @@ export function Checkout() {
             </Form>
         </div>
     );
-
 }
