@@ -1,21 +1,21 @@
 {
   "development": {
-    "username": "admin",
-    "password": "mom35750523",
+    "username": "Username",
+    "password": "Password",
     "database": "EPL Shopping Cart",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },
   "test": {
-    "username": "admin",
-    "password": "mom35750523",
+    "username": "Username",
+    "password": "Password",
     "database": "database_test",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },
   "production": {
-    "username": "admin",
-    "password": "mom35750523",
+    "username": "Username",
+    "password": "Password",
     "database": "database_production",
     "host": "127.0.0.1",
     "dialect": "postgres"
