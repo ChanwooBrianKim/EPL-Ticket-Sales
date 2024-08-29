@@ -9,8 +9,13 @@
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "strict": true,
-    "noEmit": true,
-    "typeRoots": ["./types", "./node_modules/@types"]
+    "noEmit": false,
+    "outDir": "./dist"
   },
-  "include": ["vite.config.ts", "backend/**/*.ts", "types/**/*.ts"]
+  "include": [
+    "vite.config.ts",
+    "backend/**/*.ts",
+    "types/**/*.ts",
+    "backend/config/config.json"
+  ]
 }
