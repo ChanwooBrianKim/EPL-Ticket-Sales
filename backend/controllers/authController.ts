@@ -51,7 +51,8 @@ export const register = async (req: Request, res: Response): Promise<void> => {
 
     res.status(201).json({ token });
   } catch (err) {
-    console.error(err.message);
+    const errorMessage = (err as Error).message; // Cast to Error
+    console.error(errorMessage);
     res.status(500).send('Server error');
   }
 };
