@@ -1,17 +1,20 @@
-import { Model, DataTypes } from 'sequelize'; // Import the sequelize library
-import sequelize from '../config/db'; // Import the connection instance
+import { Model, DataTypes, Optional } from 'sequelize';
+import sequelize from '../config/db';
 
-// Define the attributes for the OrderItem model
 interface OrderItemAttributes {
   id: number;
+  orderId: number;
+  productId: number;
   quantity: number;
   priceAtOrder: number;
-  orderId?: number;
-  productId?: number;
 }
 
-class OrderItem extends Model<OrderItemAttributes> implements OrderItemAttributes {
+interface OrderItemCreationAttributes extends Optional<OrderItemAttributes, 'id'> {}
+
+class OrderItem extends Model<OrderItemAttributes, OrderItemCreationAttributes> implements OrderItemAttributes {
   public id!: number;
+  public orderId!: number;
+  public productId!: number;
   public quantity!: number;
   public priceAtOrder!: number;
 
@@ -30,13 +33,20 @@ class OrderItem extends Model<OrderItemAttributes> implements OrderItemAttribute
   }
 }
 
-// Set up the OrderItem table
 OrderItem.init(
   {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
+    },
+    orderId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    productId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
     },
     quantity: {
       type: DataTypes.INTEGER,
@@ -48,9 +58,9 @@ OrderItem.init(
     },
   },
   {
-    sequelize, // Connect the sequelize instance
-    modelName: 'OrderItem', // Set the model name
+    sequelize,
+    modelName: 'OrderItem',
   }
 );
 
-export default OrderItem; // Export the OrderItem model
+export default OrderItem;
