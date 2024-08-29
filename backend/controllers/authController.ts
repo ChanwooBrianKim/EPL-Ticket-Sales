@@ -10,6 +10,10 @@ interface JwtPayload {
   };
 }
 
+export const login = async (req: Request, res: Response): Promise<void> => {
+  // your login logic
+};
+
 export const register = async (req: Request, res: Response): Promise<void> => {
   const { name, email, password } = req.body;
 
