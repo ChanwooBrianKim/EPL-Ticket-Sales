@@ -9,6 +9,7 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "server": "node dist/backend/server.js",
+    "start": "node dist/backend/server.js",
     "server-dev": "nodemon backend/server.js"
   },
   "dependencies": {
