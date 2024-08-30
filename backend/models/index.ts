@@ -48,8 +48,6 @@ const configFile: ConfigFile = {
 };
 
 const config = configFile[env];
-
-
 const db: any = {};
 
 let sequelize: Sequelize;
@@ -81,5 +79,4 @@ Object.keys(db).forEach((modelName) => {
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
-
 export default db;
