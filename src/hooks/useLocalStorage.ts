@@ -17,9 +17,9 @@ export function useLocalStorage<T>(key: string, initialValue: T | (() => T)) {
     });
 
     // useEffect to update localStorage whenever the key or value changes
-    // useEffect(() => {
-    //     localStorage.setItem(key, JSON.stringify(value)); // Store the value in localStorage as a JSON string
-    // }, [key, value]); // Dependencies: effect runs whenever key or value changes
+    useEffect(() => {
+        localStorage.setItem(key, JSON.stringify(value)); // Store the value in localStorage as a JSON string
+    }, [key, value]); // Dependencies: effect runs whenever key or value changes
 
     // Return the current value and the function to update it (as a tuple)
     return [value, setValue] as [typeof value, typeof setValue];

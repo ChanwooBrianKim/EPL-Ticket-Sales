@@ -7,10 +7,10 @@ export function Navbar() {
     const { openCart, cartQuantity } = useShoppingCart();
     const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('authToken'));
 
-    // // useEffect to update the isAuthenticated state when the component mounts
-    // useEffect(() => {
-    //     setIsAuthenticated(!!localStorage.getItem('authToken'));
-    // }, []);
+    // useEffect to update the isAuthenticated state when the component mounts
+    useEffect(() => {
+        setIsAuthenticated(!!localStorage.getItem('authToken'));
+    }, []);
 
     // Handle logout function
     const handleLogout = () => {
@@ -48,7 +48,7 @@ export function Navbar() {
                 className="rounded-circle"
                 style={{ marginLeft: '10px' }}
                 onClick={() => {
-                  // localStorage.removeItem('authToken');
+                  localStorage.removeItem('authToken');
                   window.location.href = '/login';
               }}              >
                 Logout
