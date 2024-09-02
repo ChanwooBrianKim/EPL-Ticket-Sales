@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { Request, Response } from 'express';
-import User from '../models/User';
+import User from '../models/User.js';
 
 // Define the type for the payload to be used in JWT
 interface JwtPayload {

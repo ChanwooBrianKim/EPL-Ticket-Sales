@@ -4,9 +4,9 @@ dotenv.config();
 import express, { Application } from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import authRoutes from './routes/authRoutes'; // Import the authRoutes
-import productRoutes from './routes/productRoutes'; // Import the productRoutes
-import orderRoutes from './routes/orderRoutes'; // Import the orderRoutes
+import authRoutes from './routes/authRoutes.js'; // Import the authRoutes
+import productRoutes from './routes/productRoutes.js'; // Import the productRoutes
+import orderRoutes from './routes/orderRoutes.js'; // Import the orderRoutes
 
 // Initialize Express app
 const app: Application = express();
