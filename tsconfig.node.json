@@ -2,6 +2,7 @@
   "compilerOptions": {
     "composite": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
+    "target": "ES2020",
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
@@ -10,10 +11,10 @@
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "noEmit": false,
-    "outDir": "./dist"
+    "outDir": "./dist/backend",
+    "rootDir": "./backend"
   },
   "include": [
-    "vite.config.ts",
     "backend/**/*.ts",
     "types/**/*.ts",
     "backend/config/config.json"
