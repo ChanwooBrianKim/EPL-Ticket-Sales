@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button, Form, Row, Col, ListGroup } from 'react-bootstrap';
-import { useShoppingCart } from "../context/ShoppingCartContext";
+import { useShoppingCart } from "../context/ShoppingCartContext.js";
 
 export function Checkout() {
     const { cartItems, getTotalCost } = useShoppingCart();

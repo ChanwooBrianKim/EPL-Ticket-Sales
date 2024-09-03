@@ -1,7 +1,7 @@
 import { Offcanvas, Stack, Button } from "react-bootstrap"; // Importing Offcanvas, Stack, and Button components
-import { useShoppingCart } from "../context/ShoppingCartContext"; // Importing custom hook for shopping cart context
-import { formatCurrency } from "../utilities/formatCurrency"; // Importing utility function for formatting currency
-import { CartItem } from "./CartItem"; // Importing CartItem component
+import { useShoppingCart } from "../context/ShoppingCartContext.js"; // Importing custom hook for shopping cart context
+import { formatCurrency } from "../utilities/formatCurrency.js"; // Importing utility function for formatting currency
+import { CartItem } from "./CartItem.js"; // Importing CartItem component
 import storeItems from "../data/items.json"; // Importing item data from JSON file
 import { Link } from "react-router-dom"; // Importing Link component from react-router-dom for navigation
 

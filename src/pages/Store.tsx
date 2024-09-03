@@ -1,5 +1,5 @@
 import { Col, Row } from "react-bootstrap";
-import { StoreItem } from "../components/Storeitem";
+import { StoreItem } from "../components/Storeitem.js";
 import { useState, useEffect } from "react";
 import axios from "axios";
 

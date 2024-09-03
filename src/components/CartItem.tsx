@@ -1,7 +1,7 @@
 import { Stack, Button } from "react-bootstrap"; // Importing components from react-bootstrap for UI
-import { useShoppingCart } from "../context/ShoppingCartContext"; // Importing custom hook for shopping cart context
+import { useShoppingCart } from "../context/ShoppingCartContext.js"; // Importing custom hook for shopping cart context
 import storeItems from "../data/items.json"; // Importing item data from JSON file
-import { formatCurrency } from "../utilities/formatCurrency"; // Importing utility function for formatting currency
+import { formatCurrency } from "../utilities/formatCurrency.js"; // Importing utility function for formatting currency
 
 // Type definition for the props of CartItem component
 type CartItemProps = {

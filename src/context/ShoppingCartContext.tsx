@@ -1,5 +1,5 @@
 import { useContext, createContext, ReactNode, useState } from "react"; // Importing useContext, createContext, ReactNode, and useState functions from react
-import { ShoppingCart } from "../components/ShoppingCart"; // Importing ShoppingCart component
+import { ShoppingCart } from "../components/ShoppingCart.js"; // Importing ShoppingCart component
 import { useLocalStorage } from "../hooks/useLocalStorage"; // Importing custom hook for local storage
 
 
