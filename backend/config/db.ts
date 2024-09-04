@@ -1,7 +1,14 @@
 import { Sequelize, Dialect } from 'sequelize';
+import dotenv from 'dotenv';
 import configFile from './config.json' assert { type: 'json' };
 
-const env = process.env.NODE_ENV || 'development';
+// Load environment variables from .env file
+dotenv.config();
+
+// Define the environment type (limited to the keys in config.json)
+type Environment = 'development' | 'test' | 'production';
+
+const env: Environment = (process.env.NODE_ENV as Environment) || 'development';
 
 // Define the type for the config object
 interface Config {
@@ -14,11 +21,17 @@ interface Config {
 }
 
 interface ConfigFile {
-  [key: string]: Config;
+  development: Config;
+  test: Config;
+  production: Config;
 }
 
 const config: Config = (configFile as ConfigFile)[env];
 
-const sequelize = new Sequelize(config.database, config.username, config.password, config);
+// Initialize Sequelize with the config
+const sequelize = new Sequelize(config.database, config.username, config.password, {
+  host: config.host,
+  dialect: config.dialect,
+});
 
 export default sequelize;
