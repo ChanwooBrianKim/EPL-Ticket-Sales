@@ -12,13 +12,6 @@ export function Navbar() {
         setIsAuthenticated(!!localStorage.getItem('authToken'));
     }, []);
 
-    // Handle logout function
-    const handleLogout = () => {
-        localStorage.removeItem('authToken');
-        setIsAuthenticated(false); // Update state to reflect logout
-        window.location.href = '/login'; // Redirect to login page
-    };
-
   return (
     <NavbarBs sticky="top" className="bg-white shadow-sm mb-3">
       <Container>
