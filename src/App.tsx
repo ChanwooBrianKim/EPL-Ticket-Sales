@@ -8,6 +8,7 @@ import { Navbar } from "./components/Navbar.js"; // Importing Navbar component
 import { ShoppingCartProvider } from "./context/ShoppingCartContext.js"; // Importing ShoppingCartProvider to manage shopping cart state
 import { Checkout } from "./pages/Checkout.js"; // Importing Checkout page component
 import { OrderSummary } from "./pages/OrderSummary.js"; // Importing OrderSummary page component
+import { AdminPage } from './pages/AdminPage.js'; // Importing AdminPage component
 
 import LoginForm from "./components/LoginForm.js"; // Importing LoginForm component
 import RegisterForm from "./components/RegisterForm.js"; // Importing RegisterForm component
@@ -25,6 +26,7 @@ function App() {
           <Route path="/register" element={<RegisterForm />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/order-summary" element={<OrderSummary />} />
+          <Route path="/admin" element={<AdminPage />} />
         </Routes>
       </Container>
     </ShoppingCartProvider>
