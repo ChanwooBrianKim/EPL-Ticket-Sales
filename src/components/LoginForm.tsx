@@ -1,22 +1,22 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom'; // Import the useLocation hook
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate(); // Use the navigate hook
+  const location = useLocation(); // Get the previous location before login
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const response = await axios.post('/api/auth/login', { email, password });
       const token = response.data.token;
-      // Store the token in local storage
       localStorage.setItem('authToken', token);
-      // Redirect to a different page after successful registration
-      navigate('/');
+      const redirectTo = location.state?.from?.pathname || '/';
+      navigate(redirectTo); // Redirect to the previous page or home
     } catch (err) {
       setError('Invalid credentials. Please try again.');
     }
