@@ -6,6 +6,19 @@ interface JwtPayload {
   isAdmin: boolean;
 }
 
+export const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
+  const token = req.header('Authorization')?.split(' ')[1]; // Get token from header
+  if (!token) return res.status(401).json({ error: 'Access denied' });
+
+  try {
+    const verified = jwt.verify(token, process.env.JWT_SECRET as string);
+    req.user = verified as JwtPayload;
+    next();
+  } catch (err) {
+    res.status(400).json({ error: 'Invalid token' });
+  }
+};
+
 export const protect = (req: Request, res: Response, next: NextFunction): void => {
   const authHeader = req.headers.authorization;
   if (!authHeader) {
