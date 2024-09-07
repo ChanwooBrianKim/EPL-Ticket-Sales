@@ -59,9 +59,11 @@ export function Navbar() {
                 <Nav>
                     {isAuthenticated ? (
                         <>
-                            <Nav.Link to="/profile" as={NavLink}>
+                            {isAuthenticated && (
+                              <Nav.Link to="/profile" as={NavLink}>
                                 Profile
-                            </Nav.Link>
+                              </Nav.Link>
+                            )}
                             <Nav.Link to="/dashboard" as={NavLink}>
                                 Dashboard
                             </Nav.Link>
