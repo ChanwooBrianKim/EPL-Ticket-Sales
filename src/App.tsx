@@ -9,6 +9,7 @@ import { ShoppingCartProvider } from "./context/ShoppingCartContext.js"; // Impo
 import { Checkout } from "./pages/Checkout.js"; // Importing Checkout page component
 import { OrderSummary } from "./pages/OrderSummary.js"; // Importing OrderSummary page component
 import { AdminPage } from './pages/AdminPage.js'; // Importing AdminPage component
+import { Profile } from './pages/Profile.js' // Importing Profile component
 
 import LoginForm from "./components/LoginForm.js"; // Importing LoginForm component
 import RegisterForm from "./components/RegisterForm.js"; // Importing RegisterForm component
@@ -27,6 +28,7 @@ function App() {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/order-summary" element={<OrderSummary />} />
           <Route path="/admin" element={<AdminPage />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </Container>
     </ShoppingCartProvider>
