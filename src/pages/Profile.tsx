@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 
-interface DecodedToken {
+export interface DecodedToken {
   username: string;
 }
 
 // Function to decode JWT token
-function decodeToken(token: string): DecodedToken | null {
+export function decodeToken(token: string): DecodedToken | null {
   try {
     const payload = JSON.parse(atob(token.split('.')[1])); // Decode JWT token payload
     return payload;
@@ -14,7 +14,7 @@ function decodeToken(token: string): DecodedToken | null {
   }
 }
 
-const Profile: React.FC = () => {
+export const Profile: React.FC = () => {
   const [username, setUsername] = useState<string | null>(null);
 
   useEffect(() => {
@@ -37,5 +37,3 @@ const Profile: React.FC = () => {
     </div>
   );
 };
-
-export default Profile;
