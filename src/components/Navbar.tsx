@@ -4,15 +4,22 @@ import { NavLink } from 'react-router-dom';
 import { useShoppingCart } from '../context/ShoppingCartContext.js';
 
 // Function to decode JWT token
-function decodeToken(token: string): { username: string } | null {
-    try {
-        const payload = JSON.parse(atob(token.split('.')[1])); // Decoding the JWT token payload
-        return payload;
-    } catch (error) {
-        console.error('Failed to decode token:', error);
-        return null;
-    }
+export function decodeToken(token: string): { username: string; exp: number } | null {
+  try {
+      const payload = JSON.parse(atob(token.split('.')[1])); // Decode JWT token payload
+      const isExpired = payload.exp && Date.now() >= payload.exp * 1000;
+      if (isExpired) {
+          console.warn('Token expired');
+          localStorage.removeItem('authToken'); // Remove expired token
+          return null;
+      }
+      return payload;
+  } catch (error) {
+      console.error('Failed to decode token:', error);
+      return null;
+  }
 }
+
 
 export function Navbar() {
     const { openCart, cartQuantity } = useShoppingCart();
