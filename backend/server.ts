@@ -4,10 +4,10 @@ dotenv.config();
 import express, { Application } from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import authRoutes from './routes/authRoutes';
-import productRoutes from './routes/productRoutes';
-import orderRoutes from './routes/orderRoutes';
-import userRoutes from './routes/userRoutes'; // Import the user routes
+import authRoutes from './routes/authRoutes.js';
+import productRoutes from './routes/productRoutes.js';
+import orderRoutes from './routes/orderRoutes.js';
+import userRoutes from './routes/userRoutes.js'; // Import the user routes
 
 const app: Application = express();
 
