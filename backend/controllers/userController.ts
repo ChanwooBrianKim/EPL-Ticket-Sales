@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import User from '../models/User'; // Import your User model
+import User from '../models/User.js'; // Import your User model
 import bcrypt from 'bcrypt';
 
 // Get user profile
