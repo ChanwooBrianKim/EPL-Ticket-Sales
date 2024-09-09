@@ -15,10 +15,11 @@ const LoginForm = () => {
       const response = await axios.post('/api/auth/login', { email, password });
       const token = response.data.token;
       localStorage.setItem('authToken', token);
+      console.log('Token saved:', token);
       const redirectTo = location.state?.from?.pathname || '/';
       navigate(redirectTo); // Redirect to the previous page or home
-    } catch (err) {
-      setError('Invalid credentials. Please try again.');
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Invalid credentials. Please try again.');
     }
   };
 
