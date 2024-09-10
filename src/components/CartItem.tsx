@@ -1,6 +1,7 @@
 import { useContext, createContext, ReactNode, useState, useEffect } from "react"; 
 import axios from "axios";
-import { ShoppingCart } from "../components/ShoppingCart"; 
+import { ShoppingCart } from "../components/ShoppingCart";
+import { Stack, Button } from "react-bootstrap"; // Importing components from react-bootstrap for UI
 
 // Type definition for the props of ShoppingCartProvider component
 type ShoppingCartProviderProps = {
@@ -13,6 +14,7 @@ type CartItem = {
   quantity: number;
   name: string;
   price: number;
+  imgUrl: string;
 };
 
 // Type definition for the ShoppingCartContext properties
@@ -110,5 +112,66 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
       {children}
       <ShoppingCart isOpen={isOpen} />
     </ShoppingCartContext.Provider>
+  );
+}
+
+// Type definition for the props of CartItem component
+type CartItemProps = {
+  id: number;
+  quantity: number;
+};
+
+// CartItem component definition
+export function CartItem({ id, quantity }: CartItemProps) {
+  const { removeFromCart } = useShoppingCart(); // Getting removeFromCart function from context
+  const { increaseCartQuantity, decreaseCartQuantity, cartItems } = useShoppingCart(); 
+
+  const item = cartItems.find(i => i.id === id); // Finding the item in cartItems with matching id
+
+  if (!item) return null; // If the item is not found, return null
+
+  return (
+    <Stack direction="horizontal" gap={2} className="d-flex align-items-center">
+      <img
+        src={item.imgUrl}
+        style={{ width: "125px", height: "75px", objectFit: "cover" }}
+        alt={item.name} // Adding alt attribute for accessibility
+      />
+      <div className="me-auto">
+        <div>
+          {item.name}{" "}
+          {quantity > 1 && (
+            <span className="text-muted" style={{ fontSize: ".65rem" }}>
+              x{quantity}
+            </span>
+          )}
+        </div>
+        <div className="text-muted" style={{ fontSize: ".75rem" }}>
+          ${item.price.toFixed(2)}
+        </div>
+      </div>
+      <div>${(item.price * quantity).toFixed(2)}</div>
+      <Button
+        variant="outline-danger"
+        size="sm"
+        onClick={() => removeFromCart(item.id)}
+      >
+        &times;
+      </Button>
+      <Button
+        variant="outline-primary"
+        size="sm"
+        onClick={() => decreaseCartQuantity(item.id)}
+      >
+        -
+      </Button>
+      <Button
+        variant="outline-primary"
+        size="sm"
+        onClick={() => increaseCartQuantity(item.id, item.name, item.price)}
+      >
+        +
+      </Button>
+    </Stack>
   );
 }
