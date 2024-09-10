@@ -11,7 +11,39 @@ interface JwtPayload {
 }
 
 export const login = async (req: Request, res: Response): Promise<void> => {
-  // your login logic
+  const { email, password } = req.body;
+
+  try {
+    // Check if the user exists by email
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      res.status(400).json({ msg: 'Invalid credentials' });
+      return;
+    }
+
+    // Check if the password matches
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      res.status(400).json({ msg: 'Invalid credentials' });
+      return;
+    }
+
+    // Create the JWT payload
+    const payload: JwtPayload = {
+      user: {
+        id: user.id,
+      },
+    };
+
+    // Sign the token with the secret key and set an expiration time
+    const token = jwt.sign(payload, process.env.JWT_SECRET as string, { expiresIn: '1h' });
+
+    // Send the token in the response
+    res.status(200).json({ token });
+  } catch (error) {
+    console.error('Error during login:', error);
+    res.status(500).json({ msg: 'Server error' });
+  }
 };
 
 export const register = async (req: Request, res: Response): Promise<void> => {
@@ -29,14 +61,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // // Create the new user
-    // const newUser = await User.create({
-    //   name,
-    //   email,
-    //   password: hashedPassword,
-    // });
     // Create the new user
-    
     user = await User.create({
       name,
       email,
