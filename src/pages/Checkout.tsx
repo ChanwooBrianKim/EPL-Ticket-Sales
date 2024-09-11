@@ -1,6 +1,7 @@
-import React, { useState } from "react";
-import { Button, Form, Row, Col, ListGroup } from 'react-bootstrap';
-import { useShoppingCart } from "../context/ShoppingCartContext.js";
+import { useState } from 'react';
+import { useShoppingCart } from "../context/ShoppingCartContext";
+import { ListGroup, Form, Row, Col, Button } from 'react-bootstrap';
+import axios from 'axios';
 
 export function Checkout() {
     const { cartItems, getTotalCost } = useShoppingCart();
@@ -8,11 +9,31 @@ export function Checkout() {
     const [address, setAddress] = useState('');
     const [email, setEmail] = useState('');
     const [orderPlaced, setOrderPlaced] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Implement order submission logic here
-        setOrderPlaced(true);
+        try {
+            // Order details
+            const orderData = {
+                name,
+                address,
+                email,
+                items: cartItems,
+                total: getTotalCost()
+            };
+
+            // Send order data to the backend
+            const response = await axios.post('/api/orders', orderData);
+
+            // If successful, mark the order as placed
+            if (response.status === 201) {
+                setOrderPlaced(true);
+            }
+        } catch (error) {
+            console.error('Error placing order:', error);
+            setErrorMessage('Failed to place order. Please try again.');
+        }
     };
 
     if (orderPlaced) {
@@ -30,6 +51,8 @@ export function Checkout() {
                 ))}
             </ListGroup>
             <h3>Total: ${getTotalCost()}</h3>
+
+            {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>}
 
             <Form onSubmit={handleSubmit}>
                 <Row>
