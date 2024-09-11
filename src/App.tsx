@@ -10,28 +10,31 @@ import { Checkout } from "./pages/Checkout.js"; // Importing Checkout page compo
 import { OrderSummary } from "./pages/OrderSummary.js"; // Importing OrderSummary page component
 import { AdminPage } from './pages/AdminPage.js'; // Importing AdminPage component
 import { Profile } from './pages/Profile.js' // Importing Profile component
+import { AuthProvider } from "./context/AuthContext";  // Wrap with AuthProvider
 
 import LoginForm from "./components/LoginForm.js"; // Importing LoginForm component
 import RegisterForm from "./components/RegisterForm.js"; // Importing RegisterForm component
 
 function App() {
   return (
-    <ShoppingCartProvider>
-      <Navbar />
-      <Container className="mb-4">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/store" element={<Store />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/login" element={<LoginForm />} />
-          <Route path="/register" element={<RegisterForm />} />
-          <Route path="/checkout" element={<Checkout />} />
-          <Route path="/order-summary" element={<OrderSummary />} />
-          <Route path="/admin" element={<AdminPage />} />
-          <Route path="/profile" element={<Profile />} />
-        </Routes>
-      </Container>
-    </ShoppingCartProvider>
+    <AuthProvider>
+      <ShoppingCartProvider>
+        <Navbar />
+        <Container className="mb-4">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/store" element={<Store />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/login" element={<LoginForm />} />
+            <Route path="/register" element={<RegisterForm />} />
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/order-summary" element={<OrderSummary />} />
+            <Route path="/admin" element={<AdminPage />} />
+            <Route path="/profile" element={<Profile />} />
+          </Routes>
+        </Container>
+      </ShoppingCartProvider>
+    </AuthProvider>
   );
 }
 
