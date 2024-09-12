@@ -11,12 +11,15 @@
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "noEmit": false,
-    "outDir": "./dist/backend",
-    "rootDir": "./backend"
+    "outDir": "./dist/backend",  // Ensure compiled files go here
+    "rootDir": "./backend"       // Input root for backend files
   },
   "include": [
     "backend/**/*.ts",
-    "types/**/*.ts",
-    "backend/config/config.json"
+    "types/**/*.ts",           // Includes any shared types
+    "backend/config/config.json"  // Ensure your config is included
+  ],
+  "exclude": [
+    "node_modules"  // Exclude node_modules
   ]
 }
