@@ -7,11 +7,17 @@ import OrderItem from '../models/OrderItem.js';
 export const createOrder = async (req: Request, res: Response): Promise<Response> => {
   try {
     const { userId, items } = req.body as { userId: number, items: { productId: number, quantity: number }[] };
+
+    // Validate that there are items and a userId
+    if (!userId || !items || items.length === 0) {
+      return res.status(400).json({ error: 'Invalid input. User ID and items are required.' });
+    }
     
     // Create the new order
     const order = await Order.create({ userId, total: 0, status: 'pending' });
 
     let total = 0;
+    const stockErrors: string[] = []; // Array to store stock-related errors
 
     // Loop through each item and handle stock updates
     for (let item of items) {
@@ -34,13 +40,17 @@ export const createOrder = async (req: Request, res: Response): Promise<Response
 
           total += product.price * item.quantity;
         } else {
-          return res.status(400).json({ 
-            error: `Not enough stock for ${product.name}. Available: ${product.stockQuantity}` 
-          });
+          stockErrors.push(`Not enough stock for ${product.name}. Available: ${product.stockQuantity}`);
         }
       } else {
-        return res.status(404).json({ error: `Product with id ${item.productId} not found` });
+        return res.status(404).json({ error: `Product with ID ${item.productId} not found` });
       }
+    }
+
+    // If there are stock-related errors, respond with them and cancel the order
+    if (stockErrors.length > 0) {
+      await order.destroy(); // Delete the order if there were stock issues
+      return res.status(400).json({ error: 'Stock issues with the following products:', stockErrors });
     }
 
     // Update the total price for the order
@@ -65,33 +75,31 @@ export const getOrders = async (req: Request, res: Response): Promise<Response> 
 };
 
 // Update an order by ID
-export const updateOrder = async (req: Request, res: Response): Promise<void> => {
+export const updateOrder = async (req: Request, res: Response): Promise<Response> => {
   try {
     const order = await Order.findByPk(req.params.id);
     if (!order) {
-      res.status(404).json({ error: 'Order not found' });
-      return;
+      return res.status(404).json({ error: 'Order not found' });
     }
     await order.update(req.body);
-    res.status(200).json(order);
+    return res.status(200).json(order);
   } catch (error) {
     console.error('Error updating order:', error);
-    res.status(500).json({ error: 'Failed to update order' });
+    return res.status(500).json({ error: 'Failed to update order' });
   }
 };
 
 // Delete an order by ID
-export const deleteOrder = async (req: Request, res: Response): Promise<void> => {
+export const deleteOrder = async (req: Request, res: Response): Promise<Response> => {
   try {
     const order = await Order.findByPk(req.params.id);
     if (!order) {
-      res.status(404).json({ error: 'Order not found' });
-      return;
+      return res.status(404).json({ error: 'Order not found' });
     }
     await order.destroy();
-    res.status(204).json();
+    return res.status(204).json();
   } catch (error) {
     console.error('Error deleting order:', error);
-    res.status(500).json({ error: 'Failed to delete order' });
+    return res.status(500).json({ error: 'Failed to delete order' });
   }
 };
