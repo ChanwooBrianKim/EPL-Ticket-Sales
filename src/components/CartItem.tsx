@@ -45,16 +45,20 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
   
   // Fetch cart items from the database on component mount
   useEffect(() => {
-    async function fetchCartItems() {
+    const token = localStorage.getItem('authToken');
+    const loadCart = async () => {
       try {
-        const response = await axios.get('/api/cart');  // Get cart from backend
+        const response = await axios.get(`/api/cart`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
         setCartItems(response.data);
       } catch (error) {
         console.error("Error fetching cart items", error);
       }
-    }
-    
-    fetchCartItems();
+    };
+    loadCart();
   }, []);
 
   const cartQuantity = cartItems.reduce((quantity, item) => item.quantity + quantity, 0);
@@ -123,12 +127,11 @@ type CartItemProps = {
 
 // CartItem component definition
 export function CartItem({ id, quantity }: CartItemProps) {
-  const { removeFromCart } = useShoppingCart(); // Getting removeFromCart function from context
-  const { increaseCartQuantity, decreaseCartQuantity, cartItems } = useShoppingCart(); 
+  const { removeFromCart, increaseCartQuantity, decreaseCartQuantity, cartItems } = useShoppingCart();
 
-  const item = cartItems.find(i => i.id === id); // Finding the item in cartItems with matching id
+  const item = cartItems.find(i => i.id === id);
 
-  if (!item) return null; // If the item is not found, return null
+  if (!item) return null; // Safeguard for undefined items
 
   return (
     <Stack direction="horizontal" gap={2} className="d-flex align-items-center">
