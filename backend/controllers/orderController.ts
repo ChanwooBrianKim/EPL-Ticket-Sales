@@ -6,27 +6,24 @@ import OrderItem from '../models/OrderItem.js';
 // Create a new order
 export const createOrder = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const { userId, items } = req.body as { userId: number, items: { productId: number, quantity: number }[] };
+    const { userId, items, name, address, email, total } = req.body;
 
-    // Validate that there are items and a userId
-    if (!userId || !items || items.length === 0) {
-      return res.status(400).json({ error: 'Invalid input. User ID and items are required.' });
+    // Validate that all required fields are present
+    if (!userId || !items || !name || !address || !email || items.length === 0) {
+      return res.status(400).json({ error: 'Missing required fields or no items in cart.' });
     }
-    
-    // Create the new order
-    const order = await Order.create({ userId, total: 0, status: 'pending' });
 
-    let total = 0;
-    const stockErrors: string[] = []; // Array to store stock-related errors
+    // Create the new order
+    const order = await Order.create({ userId, total, status: 'pending' });
+
+    let orderTotal = 0;
 
     // Loop through each item and handle stock updates
     for (let item of items) {
       const product = await Product.findByPk(item.productId);
-      
+
       if (product) {
-        // Check if there's enough stock
         if (product.stockQuantity >= item.quantity) {
-          // Create the order item
           await OrderItem.create({
             orderId: order.id,
             productId: product.id,
@@ -34,27 +31,21 @@ export const createOrder = async (req: Request, res: Response): Promise<Response
             priceAtOrder: product.price,
           });
 
-          // Reduce stock quantity
           product.stockQuantity -= item.quantity;
-          await product.save(); // Save the updated product stock
-
-          total += product.price * item.quantity;
+          await product.save();
+          orderTotal += product.price * item.quantity;
         } else {
-          stockErrors.push(`Not enough stock for ${product.name}. Available: ${product.stockQuantity}`);
+          return res.status(400).json({
+            error: `Not enough stock for ${product.name}. Available: ${product.stockQuantity}`,
+          });
         }
       } else {
-        return res.status(404).json({ error: `Product with ID ${item.productId} not found` });
+        return res.status(404).json({ error: `Product with id ${item.productId} not found` });
       }
     }
 
-    // If there are stock-related errors, respond with them and cancel the order
-    if (stockErrors.length > 0) {
-      await order.destroy(); // Delete the order if there were stock issues
-      return res.status(400).json({ error: 'Stock issues with the following products:', stockErrors });
-    }
-
     // Update the total price for the order
-    await order.update({ total });
+    await order.update({ total: orderTotal });
 
     return res.status(201).json({ message: 'Order created successfully', order });
   } catch (error) {
@@ -62,6 +53,7 @@ export const createOrder = async (req: Request, res: Response): Promise<Response
     return res.status(500).json({ error: 'Failed to create order' });
   }
 };
+
 
 // Fetch all orders
 export const getOrders = async (req: Request, res: Response): Promise<Response> => {
