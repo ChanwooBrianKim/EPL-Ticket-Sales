@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useShoppingCart } from "../context/ShoppingCartContext";
-import { ListGroup, Form, Row, Col, Button } from 'react-bootstrap';
+import { ListGroup, Form, Row, Col, Button, Spinner } from 'react-bootstrap';
 import axios from 'axios';
 
 export function Checkout() {
@@ -10,17 +10,39 @@ export function Checkout() {
     const [email, setEmail] = useState('');
     const [orderPlaced, setOrderPlaced] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [userId, setUserId] = useState<number | null>(null); // You can get this from context or JWT
+
+    // Example to retrieve userId from localStorage or context
+    useEffect(() => {
+        const token = localStorage.getItem('authToken');
+        if (token) {
+            const decodedToken = JSON.parse(atob(token.split('.')[1]));
+            setUserId(decodedToken.userId);
+        }
+    }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setIsLoading(true);
+        setErrorMessage('');
+
+        // Ensure all fields are filled
+        if (!name || !address || !email || cartItems.length === 0 || !userId) {
+            setErrorMessage('All fields are required and the cart cannot be empty.');
+            setIsLoading(false);
+            return;
+        }
+
         try {
             // Order details
             const orderData = {
+                userId, // Assuming userId is necessary for backend logic
                 name,
                 address,
                 email,
                 items: cartItems,
-                total: getTotalCost()
+                total: getTotalCost(),
             };
 
             // Send order data to the backend
@@ -30,14 +52,22 @@ export function Checkout() {
             if (response.status === 201) {
                 setOrderPlaced(true);
             }
-        } catch (error) {
-            console.error('Error placing order:', error);
-            setErrorMessage('Failed to place order. Please try again.');
+        } catch (error: any) {
+            console.error('Error placing order:', error.response || error.message);
+            setErrorMessage(error.response?.data?.error || 'Failed to place order. Please try again.');
+        } finally {
+            setIsLoading(false); // Always stop loading regardless of success or failure
         }
     };
 
     if (orderPlaced) {
-        return <div>Thank you for your order! You will receive a confirmation email shortly.</div>;
+        return (
+            <div>
+                <h2>Thank you for your order, {name}!</h2>
+                <p>You will receive a confirmation email shortly at {email}.</p>
+                <p>Your items will be shipped to: {address}.</p>
+            </div>
+        );
     }
 
     return (
@@ -46,15 +76,15 @@ export function Checkout() {
             <ListGroup>
                 {cartItems.map((item, idx) => (
                     <ListGroup.Item key={idx}>
-                        {item.name} - {item.quantity} x ${item.price}
+                        {item.name} - {item.quantity} x ${item.price.toFixed(2)}
                     </ListGroup.Item>
                 ))}
             </ListGroup>
-            <h3>Total: ${getTotalCost()}</h3>
+            <h3>Total: ${getTotalCost().toFixed(2)}</h3>
 
-            {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>}
+            {errorMessage && <div style={{ color: 'red', marginTop: '10px' }}>{errorMessage}</div>}
 
-            <Form onSubmit={handleSubmit}>
+            <Form onSubmit={handleSubmit} style={{ marginTop: '20px' }}>
                 <Row>
                     <Col md={6}>
                         <Form.Group controlId="formName">
@@ -94,7 +124,9 @@ export function Checkout() {
                         </Form.Group>
                     </Col>
                 </Row>
-                <Button type="submit">Place Order</Button>
+                <Button type="submit" disabled={isLoading} style={{ marginTop: '20px' }}>
+                    {isLoading ? <Spinner animation="border" size="sm" /> : 'Place Order'}
+                </Button>
             </Form>
         </div>
     );
