@@ -127,11 +127,17 @@ type CartItemProps = {
 
 // CartItem component definition
 export function CartItem({ id, quantity }: CartItemProps) {
-  const { removeFromCart, increaseCartQuantity, decreaseCartQuantity, cartItems } = useShoppingCart();
+  const { removeFromCart, increaseCartQuantity, decreaseCartQuantity, cartItems } = useShoppingCart(); 
 
-  const item = cartItems.find(i => i.id === id);
+  // Check if cartItems is defined and if the item exists
+  if (!cartItems || cartItems.length === 0) {
+    return null; // or display a loading indicator
+  }
 
-  if (!item) return null; // Safeguard for undefined items
+  const item = cartItems.find(i => i.id === id); // Finding the item in cartItems with matching id
+
+  // If the item is not found, return null
+  if (!item) return null;
 
   return (
     <Stack direction="horizontal" gap={2} className="d-flex align-items-center">
