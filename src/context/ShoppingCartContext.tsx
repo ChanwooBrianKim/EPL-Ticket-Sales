@@ -53,6 +53,7 @@ function decodeToken(token: string): DecodedToken | null {
     // Optional: Check if token is expired
     if (payload.exp && payload.exp * 1000 < Date.now()) {
       console.error("Token is expired");
+      localStorage.removeItem("authToken"); // Optionally remove the expired token
       return null;
     }
 
@@ -68,6 +69,7 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [cartItems, setCartItems] = useState<CartItem[]>([]); // State to store cart items
   const [userId, setUserId] = useState<number | null>(null); // State to store userId
+  const [isCartUpdated, setIsCartUpdated] = useState(false); // Track if cart was updated
 
   // Decode JWT token and set userId on component mount
   useEffect(() => {
@@ -94,6 +96,20 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
     loadCartFromBackend();
   }, [userId]);
 
+  // Save the cart to the backend whenever cartItems change
+  useEffect(() => {
+    const saveCartToBackend = async () => {
+      if (!userId || !isCartUpdated) return;
+      try {
+        await axios.post(`/api/cart/save`, { userId, cartItems });
+        setIsCartUpdated(false); // Reset the update flag after saving
+      } catch (error) {
+        console.error("Error saving cart to backend", error);
+      }
+    };
+    saveCartToBackend();
+  }, [cartItems, userId, isCartUpdated]);
+
   // Function to open the cart
   const openCart = () => setIsOpen(true);
 
@@ -117,7 +133,7 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
         );
       }
     });
-    saveCartToBackend(); // Save the cart to the backend
+    setIsCartUpdated(true); // Mark the cart as updated
   }
 
   // Function to decrease the quantity of a specific item in the cart
@@ -132,28 +148,18 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
         );
       }
     });
-    saveCartToBackend(); // Save the cart to the backend
+    setIsCartUpdated(true); // Mark the cart as updated
   }
 
   // Function to remove an item from the cart
   function removeFromCart(id: number) {
     setCartItems((currItems) => currItems.filter((item) => item.id !== id));
-    saveCartToBackend(); // Save the cart to the backend
+    setIsCartUpdated(true); // Mark the cart as updated
   }
 
   // Calculate total cost
   const getTotalCost = () => {
     return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
-  };
-
-  // Function to save the cart to the backend
-  const saveCartToBackend = async () => {
-    if (!userId) return;
-    try {
-      await axios.post(`/api/cart/save`, { userId, cartItems });
-    } catch (error) {
-      console.error("Error saving cart to backend", error);
-    }
   };
 
   return (
