@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc",
+    "build-backend": "tsc --project tsconfig.node.json",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "server": "node dist/backend/server.js",
