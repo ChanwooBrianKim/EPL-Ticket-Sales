@@ -1,11 +1,33 @@
 {
-  "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.app.json"
-    },
-    {
-      "path": "./tsconfig.node.json"
-    }
+  "compilerOptions": {
+    "types": ["node", "dotenv"],  // Include node and dotenv types
+    "target": "ES2020",           // Set the target JavaScript version
+    "module": "ESNext",           // Set the module system to ESNext (for both frontend and backend)
+    "moduleResolution": "node",   // Use Node-style module resolution
+    "lib": ["ES2020", "DOM", "DOM.Iterable"], // Include necessary libraries for both frontend and backend
+    "jsx": "react-jsx",           // Use React JSX for frontend
+    "esModuleInterop": true,      // Enable interoperability between CommonJS and ES modules
+    "allowSyntheticDefaultImports": true, // Allow synthetic default imports
+    "resolveJsonModule": true,    // Enable importing of .json files as modules
+    "isolatedModules": true,      // Isolated modules for frontend
+    "strict": true,               // Enable all strict type-checking options
+    "skipLibCheck": true,         // Skip type checking of declaration files
+    "forceConsistentCasingInFileNames": true, // Ensure file casing is consistent
+    "noEmit": false,              // Allow emitting compiled files
+    "outDir": "./dist",           // Set output directory for compiled files
+    "rootDir": "./",              // Set the root directory for the project
+    "composite": true,            // Enable composite projects for incremental builds
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.tsbuildinfo" // Build info for incremental builds
+  },
+  "include": [
+    "backend/**/*.ts",  // Include all backend TypeScript files
+    "frontend/**/*.ts", // Include all frontend TypeScript files
+    "types/**/*.ts",    // Include any shared types
+    "src/data/items.json",  // Include JSON data used in frontend
+    "backend/config/config.json" // Include config JSON for backend
+  ],
+  "exclude": [
+    "node_modules",  // Exclude node_modules from compilation
+    "dist"           // Exclude dist directory
   ]
 }
