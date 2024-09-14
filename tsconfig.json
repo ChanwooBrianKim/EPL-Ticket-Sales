@@ -20,14 +20,15 @@
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.tsbuildinfo" // Build info for incremental builds
   },
   "include": [
-    "backend/**/*.ts",  // Include all backend TypeScript files
-    "frontend/**/*.ts", // Include all frontend TypeScript files
-    "types/**/*.ts",    // Include any shared types
-    "src/data/items.json",  // Include JSON data used in frontend
-    "backend/config/config.json" // Include config JSON for backend
+    "backend/**/*.ts",            // Include all backend TypeScript files
+    "src/**/*.ts",                // Include all frontend TypeScript files (assuming frontend is inside "src")
+    "src/**/*.tsx",               // Include all frontend TypeScript JSX (React components)
+    "types/**/*.ts",              // Include any shared types
+    "src/data/items.json",        // Include JSON data used in frontend
+    "backend/config/config.json"  // Include config JSON for backend
   ],
   "exclude": [
     "node_modules",  // Exclude node_modules from compilation
-    "dist"           // Exclude dist directory
+    "dist"           // Exclude dist directory (compiled files)
   ]
 }
