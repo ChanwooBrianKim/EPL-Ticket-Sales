@@ -1,25 +1,25 @@
-{
-  "compilerOptions": {
-    "composite": true,
-    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
-    "target": "ES2020",
-    "skipLibCheck": true,
-    "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "module": "ESNext",
-    "moduleResolution": "node",
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "noEmit": false,
-    "outDir": "./dist/backend",  // Ensure compiled files go here
-    "rootDir": "./backend"       // Input root for backend files
-  },
-  "include": [
-    "backend/**/*.ts",
-    "types/**/*.ts",           // Includes any shared types
-    "backend/config/config.json"  // Ensure your config is included
-  ],
-  "exclude": [
-    "node_modules"  // Exclude node_modules
-  ]
-}
+// {
+//   "compilerOptions": {
+//     "composite": true,
+//     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
+//     "target": "ES2020",
+//     "skipLibCheck": true,
+//     "resolveJsonModule": true,
+//     "esModuleInterop": true,
+//     "module": "ESNext",
+//     "moduleResolution": "node",
+//     "allowSyntheticDefaultImports": true,
+//     "strict": true,
+//     "noEmit": false,
+//     "outDir": "./dist/backend",  // Ensure compiled files go here
+//     "rootDir": "./backend"       // Input root for backend files
+//   },
+//   "include": [
+//     "backend/**/*.ts",
+//     "types/**/*.ts",           // Includes any shared types
+//     "backend/config/config.json"  // Ensure your config is included
+//   ],
+//   "exclude": [
+//     "node_modules"  // Exclude node_modules
+//   ]
+// }
