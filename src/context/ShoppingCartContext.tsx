@@ -1,4 +1,4 @@
-import { useContext, createContext, ReactNode, useState, useEffect } from "react";
+import React, { useContext, createContext, ReactNode, useState, useEffect } from "react";
 import { ShoppingCart } from "../components/ShoppingCart.js";
 import axios from "axios";
 

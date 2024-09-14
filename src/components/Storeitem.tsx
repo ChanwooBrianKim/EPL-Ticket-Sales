@@ -2,6 +2,7 @@ import { Button, Card } from "react-bootstrap"; // Importing Button and Card com
 import { formatCurrency } from "../utilities/formatCurrency.js"; // Importing utility function for formatting currency
 import { useShoppingCart } from "../context/ShoppingCartContext.js"; // Importing custom hook for shopping cart context
 import { StoreItemType } from "../pages/Store.js"; // Importing StoreItemType for type safety
+import React from 'react';
 
 // StoreItem component definition
 export function StoreItem({ id, name, price, imgUrl }: StoreItemType) {

@@ -1,4 +1,4 @@
-import { useContext, createContext, ReactNode, useState, useEffect } from "react"; 
+import React, { useContext, createContext, ReactNode, useState, useEffect } from "react"; 
 import axios from "axios";
 import { ShoppingCart } from "../components/ShoppingCart";
 import { Stack, Button } from "react-bootstrap"; // Importing components from react-bootstrap for UI

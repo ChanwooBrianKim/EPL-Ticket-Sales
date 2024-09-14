@@ -4,6 +4,7 @@ import { formatCurrency } from "../utilities/formatCurrency.js"; // Importing ut
 import { CartItem } from "./CartItem.js"; // Importing CartItem component
 import storeItems from "../data/items.json"; // Importing item data from JSON file
 import { Link } from "react-router-dom"; // Importing Link component from react-router-dom for navigation
+import React from 'react';
 
 // Type definition for the props of ShoppingCart component
 type ShoppingCartProps = {
