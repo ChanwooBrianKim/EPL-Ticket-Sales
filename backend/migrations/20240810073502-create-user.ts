@@ -1,33 +1,32 @@
-import { DataTypes } from 'sequelize';
-import { QueryInterface } from 'sequelize/types';
+import { DataTypes, QueryInterface, Sequelize } from 'sequelize';
 
-export async function up(queryInterface: QueryInterface, Sequelize: typeof DataTypes) {
+export async function up(queryInterface: QueryInterface, Sequelize: Sequelize) {
   await queryInterface.createTable('Users', {
     id: {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
-      type: Sequelize.INTEGER,
+      type: DataTypes.INTEGER, // Use DataTypes here instead of Sequelize.DataTypes
     },
     name: {
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
     },
     email: {
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
     },
     password: {
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
     },
     isAdmin: {
-      type: Sequelize.BOOLEAN,
+      type: DataTypes.BOOLEAN,
     },
     createdAt: {
       allowNull: false,
-      type: Sequelize.DATE,
+      type: DataTypes.DATE,
     },
     updatedAt: {
       allowNull: false,
-      type: Sequelize.DATE,
+      type: DataTypes.DATE,
     },
   });
 }
