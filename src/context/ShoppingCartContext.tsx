@@ -30,11 +30,15 @@ type ShoppingCartContextProps = {
 };
 
 // Create a context for the shopping cart
-const ShoppingCartContext = createContext({} as ShoppingCartContextProps);
+const ShoppingCartContext = createContext<ShoppingCartContextProps | undefined>(undefined);
 
 // Custom hook to use the ShoppingCartContext
 export function useShoppingCart() {
-  return useContext(ShoppingCartContext);
+  const context = useContext(ShoppingCartContext);
+  if (!context) {
+    throw new Error("useShoppingCart must be used within a ShoppingCartProvider");
+  }
+  return context;
 }
 
 // Function to manually decode the JWT token
@@ -46,14 +50,13 @@ interface DecodedToken {
 
 function decodeToken(token: string): DecodedToken | null {
   try {
-    const payloadBase64 = token.split(".")[1]; // Get the payload part of the JWT
-    const decodedPayload = atob(payloadBase64); // Decode from base64
-    const payload = JSON.parse(decodedPayload); // Parse the decoded string into a JSON object
+    const payloadBase64 = token.split(".")[1];
+    const decodedPayload = atob(payloadBase64);
+    const payload = JSON.parse(decodedPayload);
 
-    // Optional: Check if token is expired
     if (payload.exp && payload.exp * 1000 < Date.now()) {
       console.error("Token is expired");
-      localStorage.removeItem("authToken"); // Optionally remove the expired token
+      localStorage.removeItem("authToken");
       return null;
     }
 
@@ -67,17 +70,17 @@ function decodeToken(token: string): DecodedToken | null {
 // ShoppingCartProvider component
 export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [cartItems, setCartItems] = useState<CartItem[]>([]); // State to store cart items
-  const [userId, setUserId] = useState<number | null>(null); // State to store userId
-  const [isCartUpdated, setIsCartUpdated] = useState(false); // Track if cart was updated
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [userId, setUserId] = useState<number | null>(null);
+  const [isCartUpdated, setIsCartUpdated] = useState(false);
 
   // Decode JWT token and set userId on component mount
   useEffect(() => {
     const token = localStorage.getItem("authToken");
     if (token) {
       const decoded = decodeToken(token);
-      if (decoded && decoded.userId) {
-        setUserId(decoded.userId); // Set userId from the decoded token
+      if (decoded?.userId) {
+        setUserId(decoded.userId);
       }
     }
   }, []);
@@ -86,13 +89,15 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
   useEffect(() => {
     const loadCartFromBackend = async () => {
       if (!userId) return;
+
       try {
-        const response = await axios.get(`/api/cart/${userId}`); // Replace with your backend endpoint
-        setCartItems(response.data.cartItems);
+        const response = await axios.get(`/api/cart/${userId}`);
+        setCartItems(response.data.cartItems || []);
       } catch (error) {
-        console.error("Error loading cart from backend", error);
+        console.error("Error loading cart from backend:", error);
       }
     };
+
     loadCartFromBackend();
   }, [userId]);
 
@@ -100,13 +105,15 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
   useEffect(() => {
     const saveCartToBackend = async () => {
       if (!userId || !isCartUpdated) return;
+
       try {
-        await axios.post(`/api/cart/save`, { userId, cartItems });
+        await axios.post(`/api/cart/save`, { userId, items: cartItems });
         setIsCartUpdated(false); // Reset the update flag after saving
       } catch (error) {
-        console.error("Error saving cart to backend", error);
+        console.error("Error saving cart to backend:", error);
       }
     };
+
     saveCartToBackend();
   }, [cartItems, userId, isCartUpdated]);
 
@@ -133,7 +140,7 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
         );
       }
     });
-    setIsCartUpdated(true); // Mark the cart as updated
+    setIsCartUpdated(true);
   }
 
   // Function to decrease the quantity of a specific item in the cart
@@ -148,13 +155,13 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
         );
       }
     });
-    setIsCartUpdated(true); // Mark the cart as updated
+    setIsCartUpdated(true);
   }
 
   // Function to remove an item from the cart
   function removeFromCart(id: number) {
     setCartItems((currItems) => currItems.filter((item) => item.id !== id));
-    setIsCartUpdated(true); // Mark the cart as updated
+    setIsCartUpdated(true);
   }
 
   // Calculate total cost
@@ -173,10 +180,7 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
         decreaseCartQuantity,
         removeFromCart,
         cartItems,
-        cartQuantity: cartItems.reduce(
-          (quantity, item) => item.quantity + quantity,
-          0
-        ),
+        cartQuantity: cartItems.reduce((quantity, item) => item.quantity + quantity, 0),
         getTotalCost,
       }}
     >
