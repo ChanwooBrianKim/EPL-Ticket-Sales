@@ -1,37 +1,37 @@
-'use strict';
+import { DataTypes, QueryInterface, Sequelize } from 'sequelize';
 
-module.exports = {
-  up: async (queryInterface: any, Sequelize: any) => {
-    await queryInterface.createTable('Carts', {
-      id: {
-        type: Sequelize.INTEGER.UNSIGNED,
-        autoIncrement: true,
-        primaryKey: true,
+export async function up(queryInterface: QueryInterface, Sequelize: Sequelize) {
+  await queryInterface.createTable('Carts', {
+    id: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      autoIncrement: true,
+      primaryKey: true,
+    },
+    userId: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: false,
+      references: {
+        model: 'Users', // Refers to the Users table
+        key: 'id',
       },
-      userId: {
-        type: Sequelize.INTEGER.UNSIGNED,
-        allowNull: false,
-        references: {
-          model: 'Users', // Refers to the Users table
-          key: 'id',
-        },
-      },
-      cartItems: {
-        type: Sequelize.TEXT, // Store items as JSON
-        allowNull: false,
-      },
-      createdAt: {
-        type: Sequelize.DATE,
-        allowNull: false,
-      },
-      updatedAt: {
-        type: Sequelize.DATE,
-        allowNull: false,
-      },
-    });
-  },
+    },
+    cartItems: {
+      type: DataTypes.TEXT, // Store items as JSON
+      allowNull: false,
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'), // Automatically sets the current timestamp
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'), // Updates timestamp when a row changes
+    },
+  });
+}
 
-  down: async (queryInterface: any, Sequelize: any) => {
-    await queryInterface.dropTable('Carts');
-  },
-};
+export async function down(queryInterface: QueryInterface) {
+  await queryInterface.dropTable('Carts');
+}
