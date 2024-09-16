@@ -1,5 +1,5 @@
 import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/db'; // Import the connection instance
+import sequelize from '../config/db.js'; // Import the connection instance
 import User from './User.js'; // Import the User model
 
 // Define the attributes for the Cart model
@@ -21,39 +21,48 @@ class Cart extends Model<CartAttributes, CartCreationAttributes> implements Cart
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 
+  // Method to parse items stored as JSON
   public getParsedCartItems(): any[] {
-    return JSON.parse(this.items); // Converts JSON string back to array/object
+    try {
+      return JSON.parse(this.items); // Converts JSON string back to array/object
+    } catch (error) {
+      console.error('Failed to parse cart items:', error);
+      return [];
+    }
   }
 }
 
-
 // Initialize the Cart model with the schema
-Cart.init(
-  {
-    id: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    userId: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      allowNull: false,
-      references: {
-        model: User, // Reference the User model
-        key: 'id',
+try {
+  Cart.init(
+    {
+      id: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      userId: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        allowNull: false,
+        references: {
+          model: User, // Reference the User model
+          key: 'id',
+        },
+      },
+      items: {
+        type: DataTypes.TEXT, // Store items as a JSON string
+        allowNull: false,
       },
     },
-    items: {
-      type: DataTypes.TEXT, // Store items as a JSON string
-      allowNull: false,
-    },
-  },
-  {
-    sequelize, // The Sequelize instance
-    tableName: 'carts',
-    timestamps: true,
-  }
-);
+    {
+      sequelize, // The Sequelize instance
+      tableName: 'carts',
+      timestamps: true,
+    }
+  );
+} catch (error) {
+  console.error('Error initializing Cart model:', error);
+}
 
 // Define association between Cart and User
 Cart.belongsTo(User, { foreignKey: 'userId' });
