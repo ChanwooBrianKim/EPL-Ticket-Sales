@@ -1,7 +1,7 @@
 import { QueryInterface, DataTypes, Sequelize } from 'sequelize';
 
 module.exports = {
-  up: async (queryInterface: QueryInterface, Sequelize: typeof import('sequelize').Sequelize) => {
+  up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('Carts', {
       id: {
         type: DataTypes.INTEGER.UNSIGNED,
@@ -33,7 +33,7 @@ module.exports = {
     });
   },
 
-  down: async (queryInterface: QueryInterface) => {
+  down: async (queryInterface) => {
     await queryInterface.dropTable('Carts');
   },
 };
