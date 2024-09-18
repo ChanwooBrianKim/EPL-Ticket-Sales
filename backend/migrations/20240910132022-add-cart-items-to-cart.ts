@@ -1,6 +1,6 @@
 import { DataTypes, QueryInterface, Sequelize } from 'sequelize';
 
-export async function up(queryInterface: QueryInterface, Sequelize: Sequelize) {
+export async function up(queryInterface: QueryInterface, sequelize: Sequelize) {
   await queryInterface.createTable('Carts', {
     id: {
       type: DataTypes.INTEGER.UNSIGNED,
@@ -14,6 +14,7 @@ export async function up(queryInterface: QueryInterface, Sequelize: Sequelize) {
         model: 'Users', // Refers to the Users table
         key: 'id',
       },
+      onDelete: 'CASCADE', // If the user is deleted, delete their cart
     },
     cartItems: {
       type: DataTypes.TEXT, // Store items as JSON
@@ -22,12 +23,12 @@ export async function up(queryInterface: QueryInterface, Sequelize: Sequelize) {
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'), // Automatically sets the current timestamp
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'), // Use sequelize.literal for timestamp
     },
     updatedAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'), // Updates timestamp when a row changes
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'), // Updates timestamp on row change
     },
   });
 }

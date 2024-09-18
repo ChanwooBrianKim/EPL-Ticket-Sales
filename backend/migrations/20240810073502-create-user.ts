@@ -1,12 +1,12 @@
-import { DataTypes, QueryInterface, Sequelize } from 'sequelize';
+import { DataTypes, QueryInterface } from 'sequelize';
 
-export async function up(queryInterface: QueryInterface, Sequelize: Sequelize) {
+export async function up(queryInterface: QueryInterface) {
   await queryInterface.createTable('Users', {
     id: {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
-      type: DataTypes.INTEGER, // Use DataTypes here instead of Sequelize.DataTypes
+      type: DataTypes.INTEGER,
     },
     name: {
       type: DataTypes.STRING,

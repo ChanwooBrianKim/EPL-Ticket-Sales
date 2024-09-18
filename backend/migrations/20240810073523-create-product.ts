@@ -23,10 +23,12 @@ export async function up(queryInterface: QueryInterface) {
     createdAt: {
       allowNull: false,
       type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW, // Set current timestamp by default
     },
     updatedAt: {
       allowNull: false,
       type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW, // Set current timestamp by default and update on change
     },
   });
 }
