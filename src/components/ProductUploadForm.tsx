@@ -9,7 +9,11 @@ export function ProductUploadForm() {
     stockQuantity: '',
     imgUrl: '',
   });
+  const [loading, setLoading] = useState(false); // For loading state
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
+  // Handle input change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -18,18 +22,51 @@ export function ProductUploadForm() {
     }));
   };
 
+  // Validate the form (optional: add more validation if necessary)
+  const validateForm = () => {
+    const { name, price, description, stockQuantity } = formData;
+    if (!name || !price || !description || !stockQuantity) {
+      setErrorMessage('Please fill out all required fields.');
+      return false;
+    }
+    if (parseFloat(price) <= 0 || parseInt(stockQuantity) < 0) {
+      setErrorMessage('Price and stock quantity must be positive values.');
+      return false;
+    }
+    return true;
+  };
+
+  // Handle form submit
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validateForm()) return; // Validate form before submission
+
+    setLoading(true); // Start loading
+    setErrorMessage(''); // Clear error
+    setSuccessMessage(''); // Clear success message
+
     try {
       const response = await axios.post('/api/products', formData); // Send data to backend API
-      console.log('Product created successfully:', response.data);
+      setSuccessMessage('Product created successfully!'); // Set success message
+      setFormData({ name: '', price: '', description: '', stockQuantity: '', imgUrl: '' }); // Clear form
     } catch (error) {
       console.error('Failed to create product:', error);
+      setErrorMessage('Failed to create product. Please try again.');
+    } finally {
+      setLoading(false); // End loading
     }
   };
 
   return (
     <form onSubmit={handleSubmit}>
+      <h2>Add New Product</h2>
+
+      {/* Error message */}
+      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+
+      {/* Success message */}
+      {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+
       <div>
         <label>Product Name:</label>
         <input
@@ -42,7 +79,7 @@ export function ProductUploadForm() {
       </div>
 
       <div>
-        <label>Price:</label>
+        <label>Price (AUD):</label>
         <input
           type="number"
           name="price"
@@ -74,17 +111,18 @@ export function ProductUploadForm() {
       </div>
 
       <div>
-        <label>Image URL:</label>
+        <label>Image URL (optional):</label>
         <input
           type="text"
           name="imgUrl"
           value={formData.imgUrl}
           onChange={handleChange}
-          required
         />
       </div>
 
-      <button type="submit">Upload Product</button>
+      <button type="submit" disabled={loading}>
+        {loading ? 'Uploading...' : 'Upload Product'}
+      </button>
     </form>
   );
 }
