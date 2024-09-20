@@ -1,64 +1,109 @@
 import { Request, Response } from 'express';
-import Order from '../models/Order.js'; 
-import Product from '../models/Product.js'; 
-import OrderItem from '../models/OrderItem.js'; 
+import Order from '../models/Order';
+import OrderItem from '../models/OrderItem';
+import Product from '../models/Product';
+import { sendOrderConfirmation } from '../services/emailService'; // Import the email service
 
 // Create a new order
 export const createOrder = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const { userId, items, name, address, email, total } = req.body;
+    const { userId, items } = req.body as { userId: number; items: { productId: number; quantity: number }[] };
 
-    // Validate that all required fields are present
-    if (!userId || !items || !name || !address || !email || items.length === 0) {
-      return res.status(400).json({ error: 'Missing required fields or no items in cart.' });
+    // Validate items exist
+    if (!items || items.length === 0) {
+      return res.status(400).json({ error: 'No items in the order' });
     }
 
-    // Create the new order
-    const order = await Order.create({ userId, total, status: 'pending' });
+    // Create a new order
+    const order = await Order.create({
+      userId,
+      status: 'pending',
+      total: 0, // Will be updated after calculating total
+    });
 
-    let orderTotal = 0;
+    let total = 0;
 
-    // Loop through each item and handle stock updates
-    for (let item of items) {
+    // Loop through each item, calculate total, and create order items
+    for (const item of items) {
       const product = await Product.findByPk(item.productId);
 
-      if (product) {
-        if (product.stockQuantity >= item.quantity) {
-          await OrderItem.create({
-            orderId: order.id,
-            productId: product.id,
-            quantity: item.quantity,
-            priceAtOrder: product.price,
-          });
-
-          product.stockQuantity -= item.quantity;
-          await product.save();
-          orderTotal += product.price * item.quantity;
-        } else {
-          return res.status(400).json({
-            error: `Not enough stock for ${product.name}. Available: ${product.stockQuantity}`,
-          });
-        }
-      } else {
+      if (!product) {
         return res.status(404).json({ error: `Product with id ${item.productId} not found` });
       }
+
+      // Check product stock
+      if (product.stockQuantity < item.quantity) {
+        return res.status(400).json({ error: `Not enough stock for product: ${product.name}` });
+      }
+
+      // Create the order item
+      await OrderItem.create({
+        orderId: order.id,
+        productId: product.id,
+        quantity: item.quantity,
+        priceAtOrder: product.price,
+      });
+
+      // Decrease stock
+      product.stockQuantity -= item.quantity;
+      await product.save();
+
+      // Add to total order price
+      total += product.price * item.quantity;
     }
 
-    // Update the total price for the order
-    await order.update({ total: orderTotal });
+    // Update the order total
+    await order.update({ total });
 
-    return res.status(201).json({ message: 'Order created successfully', order });
+    // Send order confirmation email
+    const orderDetails = {
+      totalAmount: total,
+      orderStatus: order.status,
+      items: await OrderItem.findAll({
+        where: { orderId: order.id },
+        include: [{ model: Product, as: 'product', attributes: ['name', 'price'] }],
+      }),
+    };
+
+    const userEmail = req.body.email; // Ensure you are passing email in the request body
+    if (userEmail) {
+      await sendOrderConfirmation(userEmail, orderDetails);
+    }
+
+    return res.status(201).json({
+      message: 'Order placed successfully',
+      order: {
+        id: order.id,
+        total: order.total,
+        status: order.status,
+        items: orderDetails.items,
+      },
+    });
   } catch (error) {
     console.error('Error creating order:', error);
     return res.status(500).json({ error: 'Failed to create order' });
   }
 };
 
-
-// Fetch all orders
+// Fetch all orders for a user
 export const getOrders = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const orders = await Order.findAll({ include: Product });
+    const { userId } = req.params;
+    const orders = await Order.findAll({
+      where: { userId },
+      include: [
+        {
+          model: OrderItem,
+          as: 'orderItems',
+          include: [{ model: Product, as: 'product', attributes: ['name', 'price'] }],
+        },
+      ],
+    });
+
+    if (!orders || orders.length === 0) {
+      return res.status(404).json({ error: 'No orders found' });
+    }
+
     return res.status(200).json(orders);
   } catch (error) {
     console.error('Error fetching orders:', error);
@@ -66,30 +111,41 @@ export const getOrders = async (req: Request, res: Response): Promise<Response> 
   }
 };
 
-// Update an order by ID
-export const updateOrder = async (req: Request, res: Response): Promise<Response> => {
+// Update order status
+export const updateOrderStatus = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const order = await Order.findByPk(req.params.id);
+    const { orderId } = req.params;
+    const { status } = req.body;
+
+    const order = await Order.findByPk(orderId);
+
     if (!order) {
       return res.status(404).json({ error: 'Order not found' });
     }
-    await order.update(req.body);
-    return res.status(200).json(order);
+
+    await order.update({ status });
+
+    return res.status(200).json({ message: 'Order status updated successfully', order });
   } catch (error) {
-    console.error('Error updating order:', error);
-    return res.status(500).json({ error: 'Failed to update order' });
+    console.error('Error updating order status:', error);
+    return res.status(500).json({ error: 'Failed to update order status' });
   }
 };
 
-// Delete an order by ID
+// Delete an order
 export const deleteOrder = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const order = await Order.findByPk(req.params.id);
+    const { orderId } = req.params;
+
+    const order = await Order.findByPk(orderId);
+
     if (!order) {
       return res.status(404).json({ error: 'Order not found' });
     }
+
     await order.destroy();
-    return res.status(204).json();
+
+    return res.status(204).send();
   } catch (error) {
     console.error('Error deleting order:', error);
     return res.status(500).json({ error: 'Failed to delete order' });
