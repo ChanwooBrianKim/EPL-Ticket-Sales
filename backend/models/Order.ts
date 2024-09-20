@@ -1,7 +1,7 @@
 import { Model, DataTypes, Optional } from 'sequelize'; // Import the sequelize library
-import sequelize from '../config/db.js'; // Import the connection instance
-import User from './User.js'; // Import the User model
-import Product from './Product.js'; // Import the Product model
+import sequelize from '../config/db'; // Import the connection instance (removed .js for ESM module)
+import User from './User'; // Import the User model
+import Product from './Product'; // Import the Product model
 
 // Define Order attributes
 interface OrderAttributes {
@@ -13,9 +13,10 @@ interface OrderAttributes {
   updatedAt?: Date;
 }
 
-// Optional attributes for creating a new order
+// Optional attributes for creating a new order (id is auto-generated)
 interface OrderCreationAttributes extends Optional<OrderAttributes, 'id'> {}
 
+// Define the Order model
 class Order extends Model<OrderAttributes, OrderCreationAttributes> implements OrderAttributes {
   public id!: number;
   public status!: string;
@@ -26,11 +27,13 @@ class Order extends Model<OrderAttributes, OrderCreationAttributes> implements O
   public readonly updatedAt!: Date;
 
   static associate() {
-    Order.belongsTo(User, { foreignKey: 'userId' });
-    Order.belongsToMany(Product, { through: 'OrderItems', foreignKey: 'orderId' });
+    // Define associations
+    Order.belongsTo(User, { foreignKey: 'userId', as: 'user' });
+    Order.belongsToMany(Product, { through: 'OrderItems', foreignKey: 'orderId', as: 'products' });
   }
 }
 
+// Initialize the Order model
 Order.init(
   {
     id: {
@@ -51,15 +54,20 @@ Order.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'Users',
+        model: 'Users', // Refers to Users table
         key: 'id',
       },
+      onDelete: 'CASCADE', // If a user is deleted, cascade the deletion to the orders
     },
   },
   {
     sequelize,
-    modelName: 'Order',
+    tableName: 'orders', // Explicitly define table name (good for consistency)
+    timestamps: true, // Add timestamps (createdAt, updatedAt)
   }
 );
+
+// Ensure associations are initialized properly after model definition
+Order.associate();
 
 export default Order; // Export the Order model
