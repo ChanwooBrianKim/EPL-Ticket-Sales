@@ -1,7 +1,7 @@
 import { Model, DataTypes, Optional } from 'sequelize'; // Import the sequelize library
-import sequelize from '../config/db'; // Import the connection instance (removed .js for ESM module)
-import User from './User'; // Import the User model
-import Product from './Product'; // Import the Product model
+import sequelize from '../config/db.js'; // Import the connection instance (removed .js for ESM module)
+import User from './User.js'; // Import the User model
+import Product from './Product.js'; // Import the Product model
 
 // Define Order attributes
 interface OrderAttributes {
