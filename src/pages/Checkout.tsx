@@ -26,28 +26,31 @@ export function Checkout() {
         e.preventDefault();
         setIsLoading(true);
         setErrorMessage('');
-
-        // Ensure all fields are filled
-        if (!name || !address || !email || cartItems.length === 0 || !userId) {
+    
+        console.log("Cart Items:", cartItems); // Add this line to debug
+        console.log("Cart Items Length:", cartItems.length); // Debug cartItems length
+    
+        // Ensure all fields are filled and the cart has items
+        if (!name || !address || !email || !Array.isArray(cartItems) || cartItems.length === 0 || !userId) {
             setErrorMessage('All fields are required and the cart cannot be empty.');
             setIsLoading(false);
             return;
         }
-
+    
         try {
             // Order details
             const orderData = {
-                userId, // Assuming userId is necessary for backend logic
+                userId, 
                 name,
                 address,
                 email,
                 items: cartItems,
                 total: getTotalCost(),
             };
-
+    
             // Send order data to the backend
             const response = await axios.post('/api/orders', orderData);
-
+    
             // If successful, mark the order as placed
             if (response.status === 201) {
                 setOrderPlaced(true);
@@ -59,7 +62,7 @@ export function Checkout() {
             setIsLoading(false); // Always stop loading regardless of success or failure
         }
     };
-
+    
     if (orderPlaced) {
         return (
             <div>
