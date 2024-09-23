@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import Order from '../models/Order';
-import OrderItem from '../models/OrderItem';
-import Product from '../models/Product';
-import { sendOrderConfirmation } from '../services/emailService'; // Import the email service
+import Order from '../models/Order.js';
+import OrderItem from '../models/OrderItem.js';
+import Product from '../models/Product.js';
+import { sendOrderConfirmation } from '../services/emailService.js'; // Import the email service
 
 // Create a new order
 export const createOrder = async (req: Request, res: Response): Promise<Response> => {
