@@ -1,6 +1,8 @@
 import React, { useContext, createContext, ReactNode, useState, useEffect } from "react";
-import { ShoppingCart } from "../components/ShoppingCart.js";
+import { ShoppingCart } from "../components/ShoppingCart";
 import axios from "axios";
+import debounce from "lodash/debounce"; // Import lodash debounce function
+import { Spinner } from "react-bootstrap";
 
 // Type definition for ShoppingCartProvider props
 type ShoppingCartProviderProps = {
@@ -73,6 +75,7 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [userId, setUserId] = useState<number | null>(null);
   const [isCartUpdated, setIsCartUpdated] = useState(false);
+  const [loading, setLoading] = useState(true); // Loading state for the cart
 
   // Decode JWT token and set userId on component mount
   useEffect(() => {
@@ -89,32 +92,36 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
   useEffect(() => {
     const loadCartFromBackend = async () => {
       if (!userId) return;
+      setLoading(true); // Start loading
 
       try {
         const response = await axios.get(`/api/cart/${userId}`);
         setCartItems(response.data.cartItems || []);
       } catch (error) {
         console.error("Error loading cart from backend:", error);
+      } finally {
+        setLoading(false); // Stop loading
       }
     };
 
     loadCartFromBackend();
   }, [userId]);
 
+  // Debounced function to save the cart to the backend
+  const saveCartToBackend = debounce(async (userId: number | null, cartItems: CartItem[]) => {
+    if (!userId || !isCartUpdated) return;
+
+    try {
+      await axios.post(`/api/cart/save`, { userId, items: cartItems });
+      setIsCartUpdated(false); // Reset the update flag after saving
+    } catch (error) {
+      console.error("Error saving cart to backend:", error);
+    }
+  }, 500); // 500ms debounce
+
   // Save the cart to the backend whenever cartItems change
   useEffect(() => {
-    const saveCartToBackend = async () => {
-      if (!userId || !isCartUpdated) return;
-
-      try {
-        await axios.post(`/api/cart/save`, { userId, items: cartItems });
-        setIsCartUpdated(false); // Reset the update flag after saving
-      } catch (error) {
-        console.error("Error saving cart to backend:", error);
-      }
-    };
-
-    saveCartToBackend();
+    saveCartToBackend(userId, cartItems);
   }, [cartItems, userId, isCartUpdated]);
 
   // Function to open the cart
@@ -168,6 +175,11 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
   const getTotalCost = () => {
     return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
   };
+
+  // Render the loading state if the cart is still loading
+  if (loading) {
+    return <Spinner animation="border" />;
+  }
 
   return (
     <ShoppingCartContext.Provider
