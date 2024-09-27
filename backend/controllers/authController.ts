@@ -10,6 +10,7 @@ interface JwtPayload {
   };
 }
 
+// Login a user and send a JWT token in the response if successful
 export const login = async (req: Request, res: Response): Promise<void> => {
   const { email, password } = req.body;
 
@@ -46,6 +47,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+// Register a new user and send a JWT token in the response if successful
 export const register = async (req: Request, res: Response): Promise<void> => {
   const { name, email, password } = req.body;
 
