@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
+// ProductUploadForm component
 export function ProductUploadForm() {
   const [formData, setFormData] = useState({
     name: '',
