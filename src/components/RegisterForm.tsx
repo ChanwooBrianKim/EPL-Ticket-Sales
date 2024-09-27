@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
+// RegisterForm component
 const RegisterForm = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
