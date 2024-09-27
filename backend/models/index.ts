@@ -23,6 +23,7 @@ interface ConfigFile {
   [key: string]: Config; // This allows the object to be indexed by a string
 }
 
+// This is the configuration object
 const configFile: ConfigFile = {
   development: {
     username: "your_dev_username",
