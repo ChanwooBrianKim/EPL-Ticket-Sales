@@ -6,6 +6,7 @@ interface JwtPayload {
   isAdmin: boolean;
 }
 
+// Middleware to authenticate a token
 export const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
   const token = req.header('Authorization')?.split(' ')[1]; // Get token from header
   if (!token) return res.status(401).json({ error: 'Access denied' });
@@ -19,6 +20,7 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
   }
 };
 
+// Middleware to check if user is an admin
 export const protect = (req: Request, res: Response, next: NextFunction): void => {
   const authHeader = req.headers.authorization;
   if (!authHeader) {
