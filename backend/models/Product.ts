@@ -24,6 +24,7 @@ class Product extends Model<ProductAttributes, ProductCreationAttributes> implem
   public readonly updatedAt!: Date;
 }
 
+// The `sequelize` parameter is the connection instance
 Product.init(
   {
     id: {
