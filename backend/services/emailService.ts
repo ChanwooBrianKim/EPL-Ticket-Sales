@@ -9,6 +9,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+// Function to send an order confirmation email
 export const sendOrderConfirmation = async (email: string, orderDetails: any) => {
   // Check if email user and pass are properly set up
   if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
