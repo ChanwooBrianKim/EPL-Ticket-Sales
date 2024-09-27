@@ -65,6 +65,7 @@ export const createOrder = async (req: Request, res: Response): Promise<Response
       }),
     };
 
+    // Send the order confirmation email
     const userEmail = req.body.email; // Ensure you are passing email in the request body
     if (userEmail) {
       await sendOrderConfirmation(userEmail, orderDetails);
