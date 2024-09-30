@@ -15,6 +15,7 @@ import { AuthProvider } from "./context/AuthContext";  // Wrap with AuthProvider
 import LoginForm from "./components/LoginForm.js"; // Importing LoginForm component
 import RegisterForm from "./components/RegisterForm.js"; // Importing RegisterForm component
 
+// Main App component
 function App() {
   return (
     <AuthProvider>
