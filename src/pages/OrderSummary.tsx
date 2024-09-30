@@ -18,6 +18,7 @@ interface OrderDetails {
   createdAt: string;
 }
 
+// Order summary component
 export function OrderSummary() {
   const [orderDetails, setOrderDetails] = useState<OrderDetails | null>(null);
   const { cartItems } = useShoppingCart(); // Assuming the order is linked to the shopping cart context
