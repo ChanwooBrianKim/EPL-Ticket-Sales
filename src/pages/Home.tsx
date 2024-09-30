@@ -2,6 +2,7 @@ import React from 'react';
 import { Container, Row, Col, Button, Card } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
+// Home page component
 export default function Home() {
   return (
     <Container className="py-5">
