@@ -6,6 +6,7 @@ export interface DecodedToken {
   exp: number;
 }
 
+// Function to decode JWT token
 export function decodeToken(token: string): DecodedToken | null {
   try {
     const payload = JSON.parse(atob(token.split('.')[1]));
@@ -20,6 +21,7 @@ export function decodeToken(token: string): DecodedToken | null {
   }
 }
 
+// Profile component
 export const Profile: React.FC = () => {
   const [username, setUsername] = useState<string | null>(null);
   const [currentPassword, setCurrentPassword] = useState('');
