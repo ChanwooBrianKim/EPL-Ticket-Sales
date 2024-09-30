@@ -14,6 +14,7 @@ function decodeToken(token: string): { username: string } | null {
     }
 }
 
+// Navbar component
 export function Navbar() {
     const { openCart, cartQuantity } = useShoppingCart();
     const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('authToken'));
