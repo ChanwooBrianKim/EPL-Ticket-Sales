@@ -11,6 +11,7 @@ export interface StoreItemType {
   imgUrl: string;
 }
 
+// Store component
 export function Store() {
   const [storeItems, setStoreItems] = useState<StoreItemType[]>([]);
   const [error, setError] = useState<string | null>(null);
