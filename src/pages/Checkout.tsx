@@ -3,6 +3,7 @@ import { useShoppingCart } from "../context/ShoppingCartContext";
 import { ListGroup, Form, Row, Col, Button, Spinner } from 'react-bootstrap';
 import axios from 'axios';
 
+// Checkout page component
 export function Checkout() {
     const { cartItems, getTotalCost } = useShoppingCart();
     const [name, setName] = useState('');
