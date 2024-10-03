@@ -12,6 +12,7 @@ interface ProductAttributes {
 
 interface ProductCreationAttributes extends Optional<ProductAttributes, 'id'> {}
 
+// Product class
 class Product extends Model<ProductAttributes, ProductCreationAttributes> implements ProductAttributes {
   public id!: number;
   public name!: string;
